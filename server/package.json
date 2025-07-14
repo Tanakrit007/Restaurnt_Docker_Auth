@@ -2,13 +2,14 @@
   "name": "server",
   "version": "1.0.0",
   "description": "restaurant Resrtful API",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "dev": "nodemon index.js"
   },
-  "author": "Nitiphon",
+  "author": "Thanakit",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
