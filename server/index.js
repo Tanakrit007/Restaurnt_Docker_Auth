@@ -5,6 +5,15 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 import restaurantRouter from "./routers/restaurant.router.js";
 
+import cors from "cors";
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "127.0.0.1:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

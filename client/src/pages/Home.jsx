@@ -3,35 +3,29 @@ import NavBar from "../components/NavBar";
 import Restaurants from "../components/Restaurants";
 
 const Home = () => {
-  const [restaurant, setRestaurants] = useState([]);
-  // const [keyword, setKeyword] = useState("");
-  const [filetedRestarant, setFiletedRestarant] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const handleSearch = (keyword) => {
-    if (keyword === "") {
+    if (!keyword) {
+      setFilteredRestaurants(restaurants);
       return;
     }
-    const result = restaurant.filter((restaurant) => {
+    const result = restaurants.filter((restaurant) => {
       return (
-        restaurant.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        restaurant.name.toLowerCase().includes(keyword.toLowerCase()) ||
         restaurant.type.toLowerCase().includes(keyword.toLowerCase())
       );
     });
-    setFiletedRestarant(result);
-    console.log("keyword", keyword);
+    setFilteredRestaurants(result);
   };
   useEffect(() => {
-    // call api : getAllRestaurants เรียก API
-    fetch("http://localhost:3000/restaurants")
-      .then((res) => {
-        // convert เเปลงเป็น Json
-        return res.json();
-      })
+    fetch("http://localhost:5000/api/v1/restaurant")
+      .then((res) => res.json())
       .then((response) => {
         setRestaurants(response);
-        setFiletedRestarant(response);
+        setFilteredRestaurants(response);
       })
       .catch((err) => {
-        //เช็ค error
         console.log(err.message);
       });
   }, []);
@@ -70,7 +64,7 @@ const Home = () => {
         </label>
       </div>
       <div></div>
-      <Restaurants restaurants={filetedRestarant} />
+      <Restaurants restaurants={filteredRestaurants} />
     </div>
   );
 };
