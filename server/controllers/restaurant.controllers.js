@@ -1,4 +1,4 @@
-import Restaurant from "../model/restaurant.model.js";
+import Restaurant from '../model/restaurant.model.js';
 const restaurantController = {};
 
 // Create and Save a new Restaurant
@@ -90,4 +90,3 @@ restaurantController.deleteRestaurant = async (req, res) => {
         });
 }
 export default restaurantController;
-

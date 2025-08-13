@@ -1,13 +1,56 @@
-# Node modules
+# Node.js dependencies
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+
+# dotenv
+
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
 # Build output
 dist/
+build/
 
-# Environment variables
+# Vite cache
+.vite/
+.cache/
+*.tsbuildinfo
 
-# Logs
-*.log
+# Editor/IDE settings
+.vscode/
+.idea/
+*.swp
 
-# System files
+# Docker
+docker-compose.override.yml
+*.local
+
+# OS-specific
 .DS_Store
+Thumbs.db
+
+# Client-specific
+client/node_modules/
+client/dist/
+client/.vite/
+
+# Server-specific
+server/node_modules/
+server/dist/
+server/.env
+
+# Misc
+*.tgz
+*.bak
+*.tmp
