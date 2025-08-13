@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '../Component/Navbar'
+import Navbar from "../components/NavBar.jsx";
 import restaurantService from '../service/restairants.service';
 import Swal from 'sweetalert2';
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router'
-import Navbar from '../components/NavBar.jsx';
+import Navbar from '../Component/Navbar'
 import restaurantService from '../service/restairants.service';
 import Swal from 'sweetalert2';
 

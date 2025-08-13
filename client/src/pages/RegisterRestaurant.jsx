@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from "../components/NavBar.jsx";
+import Navbar from '../Component/Navbar';
 import authService from '../service/auth.service';
 import Swal from 'sweetalert2';
 
