@@ -1,29 +1,51 @@
-// import { useState, useContext, createContext, useEffect, use } from "react";
-// import AuthService from "../service/auth.service";
-// import TokenService from "../service/token.service";
+import React, { useState, useContext, createContext, useEffect } from "react";
+import authService from "../service/auth.service";
+import tokenService from "../service/token.service";
 
-// const AuthContext = createContext(null);
-// export const AuthProvider = ({ children }) => {
-//   const [user, setUser] = useState(getUser);
-//   const login = (user) => setUser(user);
-//   const logout = () => {
-//     AuthService.logout();
-//     setUser(null);
-//   };
+const AuthContext = createContext(null);
 
-//   useEffect(() => {
-//     TokenService.setUser(user);
-//   }, [user]);
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-//   function getUser() {
-//     const currentUser = TokenService.getUser();
-//     return currentUser;
-//   }
+    const login = (userData) => {
+        setUser(userData);
+        tokenService.setUser(userData);
+    };
 
-//   return (
-//     <AuthContext.Provider value={{ user, login, logout }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-// export const useAuthContext = () => useContext(AuthContext);
+    const logout = () => {
+        authService.logout();
+        setUser(null);
+        tokenService.removeUser();
+    };
+
+    const getUser = () => {
+        return tokenService.getUser();
+    };
+
+    // Initialize user from localStorage on app start
+    useEffect(() => {
+        const storedUser = tokenService.getUser();
+        if (storedUser && storedUser.accessToken) {
+            setUser(storedUser);
+        }
+        setLoading(false);
+    }, []);
+
+    const value = {
+        user,
+        login,
+        logout,
+        getUser,
+        loading,
+        isAuthenticated: !!user?.accessToken
+    };
+
+    return React.createElement(
+        AuthContext.Provider,
+        { value: value },
+        children
+    );
+};
+
+export const useAuthContext = () => useContext(AuthContext);
