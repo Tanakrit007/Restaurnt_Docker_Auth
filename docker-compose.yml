@@ -8,7 +8,6 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
-    command: nodemon --legacy-watch index.js
     restart: always
     environment:
       - CHOKIDAR_USEPOLLING=true

@@ -49,6 +49,10 @@ app.get("/", (req, res) => {
   res.send("🍽️ Restaurant Useful API");
 });
 
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/restaurants", restaurantRoutes);
+
 // ✅ ตั้ง route
 app.use("/api/v1/restaurants", restaurantRoutes);
 app.use("/api/auth", authRoutes);
