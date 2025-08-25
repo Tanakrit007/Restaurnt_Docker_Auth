@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../context/authcontext";
 
-const Card = ({ id, name, type, imageUrl }) => {
+const Card = ({ id, name, type, imageURL: imageUrl }) => {
   const { user } = useAuthContext();
 
   const handleDelete = async (id) => {
@@ -33,6 +33,7 @@ const Card = ({ id, name, type, imageUrl }) => {
       alert("Error deleting restaurant. Please try again.");
     }
   };
+
   return (
     <div className="card bg-base-100 w-96 shadow-sm">
       <figure className="h-48 w-full">

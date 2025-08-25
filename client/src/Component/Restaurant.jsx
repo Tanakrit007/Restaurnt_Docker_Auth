@@ -12,13 +12,15 @@ const Restaurants = ({ restaurants }) => {
               id={restaurant.id}
               name={restaurant.name}
               type={restaurant.type}
-              imageUrl={restaurant.imageUrl}
+              imageURL={restaurant.imageURL || restaurant.img}
             />
           ))
         ) : (
           <div className="text-center p-4">
             <h2 className="text-xl font-semibold mb-2">No restaurants found</h2>
-            <p className="text-gray-600">Please try again later or refine your search.</p>
+            <p className="text-gray-600">
+              Please try again later or refine your search.
+            </p>
           </div>
         )}
       </div>
