@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom"; // ✅ แก้ตรงนี้
 import Navbar from "../Component/Navbar";
 import authService from "../service/auth.service";
 import { useAuthContext } from "../context/AuthContext.jsx";
@@ -16,11 +16,11 @@ const RegisterRestaurant = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login: contextLogin } = useAuthContext();
+  const { login: contextLogin } = useAuthContext(); // ถ้าไม่ได้ใช้ login ตัดทิ้งได้
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRegister({ ...register, [name]: value });
+    setRegister((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -28,14 +28,13 @@ const RegisterRestaurant = () => {
     setLoading(true);
     setError("");
 
-    // Validate passwords match
+    // 1) validate พื้นฐาน
     if (register.password !== register.confirmPassword) {
       setError("Passwords do not match");
       setLoading(false);
       return;
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(register.email)) {
       setError("Please enter a valid email address");
@@ -43,15 +42,21 @@ const RegisterRestaurant = () => {
       return;
     }
 
-    try {
-      const response = await authService.register(
-        register.username,
-        register.name,
-        register.email,
-        register.password
-      );
+    // 2) เตรียม payload ส่งให้ตรงกับแบ็กเอนด์
+    const payload = {
+      username: register.username.trim(),
+      name: register.name.trim(),
+      email: register.email.trim(),
+      password: register.password,
+    };
 
-      if (response.status === 200 || response.status === 201) {
+    try {
+      // ✅ ปรับตามรูปแบบที่ authService.register รองรับ
+      // ถ้า register(expectObject) → authService.register(payload)
+      // ถ้า register(u,n,e,p) → authService.register(payload.username, payload.name, payload.email, payload.password)
+      const response = await authService.register(payload);
+
+      if (response?.status === 200 || response?.status === 201) {
         await Swal.fire({
           title: "Registration Successful",
           text: `Welcome, ${register.username}! Your account has been created.`,
@@ -60,26 +65,31 @@ const RegisterRestaurant = () => {
           confirmButtonColor: "#10B981",
           background: "#1f2937",
           color: "#ffffff",
-          showClass: {
-            popup: "animate__animated animate__fadeInUp",
-          },
-          hideClass: {
-            popup: "animate__animated animate__fadeOutDown",
-          },
-          timer: 3000,
+          showClass: { popup: "animate__animated animate__fadeInUp" },
+          hideClass: { popup: "animate__animated animate__fadeOutDown" },
+          timer: 2000,
           timerProgressBar: true,
         });
         navigate("/login");
+      } else {
+        throw new Error(response?.data?.message || "Registration failed");
       }
-    } catch (error) {
-      setError(
-        error.response?.data?.message || "An error occurred during registration"
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        "An error occurred during registration";
+
+      console.error(
+        "Register error:",
+        err?.response?.status,
+        err?.response?.data || err
       );
+
+      setError(msg);
       Swal.fire({
         title: "Registration Failed",
-        text:
-          error.response?.data?.message ||
-          "An error occurred during registration",
+        text: msg,
         icon: "error",
         confirmButtonText: "Try Again",
         confirmButtonColor: "#EF4444",
