@@ -1,6 +1,6 @@
 import restaurantController from "../controllers/restaurant.controllers.js";
 import express from "express";
-import authJwt from "../middleware/authJwt.js"; // ✅ แก้ path + case
+import authJwt from "../middleware/authjwt.js"; // ✅ แก้ path + case
 
 const router = express.Router();
 
