@@ -4,7 +4,7 @@ import "./index.css";
 import "./styles/sweetalert-custom.css";
 import router from "./routes/Routes";
 import { RouterProvider } from "react-router";
-import { AuthProvider } from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/authcontext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

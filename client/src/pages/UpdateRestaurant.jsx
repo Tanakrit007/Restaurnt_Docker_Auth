@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../Component/Navbar";
-import { useAuthContext } from "../context/authcontext";
+import { useAuthContext } from "../context/authcontext.jsx";
 import restaurantService from "../service/restaurants.service";
 import Swal from "sweetalert2";
 
