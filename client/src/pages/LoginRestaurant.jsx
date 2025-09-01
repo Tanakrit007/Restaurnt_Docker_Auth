@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Navbar from "../Component/Navbar";
 import authService from "../service/auth.service";
-import { useAuthContext } from "../context/authcontext";
+import { useAuthContext } from "../context/AuthContext.jsx";
 import Swal from "sweetalert2";
 
 const LoginRestaurant = () => {

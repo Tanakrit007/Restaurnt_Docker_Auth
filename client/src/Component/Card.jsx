@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuthContext } from "../context/authcontext";
+import { useAuthContext } from "../context/AuthContext.jsx";
 
 const Card = ({ id, name, type, imageURL: imageUrl }) => {
   const { user } = useAuthContext();

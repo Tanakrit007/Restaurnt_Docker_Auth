@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuthContext } from "../context/authcontext";
+import { useAuthContext } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router";
 import Navbar from "../Component/Navbar";
 import Swal from "sweetalert2";
