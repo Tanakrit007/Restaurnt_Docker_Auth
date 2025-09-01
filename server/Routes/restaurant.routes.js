@@ -11,10 +11,15 @@ router.post("/", restaurantController.restaurantCreate);
 router.get("/", restaurantController.getAllRestaurants);
 
 // GET http://localhost:5000/api/v1/restaurants/:id
-router.get("/:id", authJwt.verifyToken, restaurantController.getRestaurantById);
+router.get(
+  "/:id",
+  authJwt.verifyToken,
+  authJwt.IsAdmin,
+  restaurantController.getRestaurantById
+);
 
 // PUT http://localhost:5000/api/v1/restaurants/:id
-router.put("/:id", restaurantController.UpdateRestaurant);
+router.put("/:id", authJwt.verifyToken, restaurantController.UpdateRestaurant);
 
 // DELETE http://localhost:5000/api/v1/restaurants/:id
 router.delete(
