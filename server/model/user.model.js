@@ -20,5 +20,11 @@ const User = sequelize.define("user", {
   },
 });
 
-// User.sync() จะถูกจัดการโดย db.sequelize.sync() ใน index.js แทน
+User.sync({ force: true })
+  .then(() => {
+    console.log("Table created or already exists");
+  })
+  .catch((error) => {
+    console.log("Error creating table", error);
+  });
 export default User;

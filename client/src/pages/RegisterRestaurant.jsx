@@ -1,100 +1,86 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ แก้ตรงนี้
-import Navbar from "../Component/Navbar";
-import authService from "../service/auth.service";
-import { useAuthContext } from "../context/AuthContext.jsx";
-import Swal from "sweetalert2";
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import Navbar from '../Component/Navbar';
+import authService from '../service/auth.service';
+import { useAuthContext } from '../context/authcontext';
+import Swal from 'sweetalert2';
 
 const RegisterRestaurant = () => {
   const [register, setRegister] = useState({
-    username: "",
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    username: '',
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login: contextLogin } = useAuthContext(); // ถ้าไม่ได้ใช้ login ตัดทิ้งได้
+  const { login: contextLogin } = useAuthContext();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRegister((prev) => ({ ...prev, [name]: value }));
+    setRegister({ ...register, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
-    // 1) validate พื้นฐาน
+    // Validate passwords match
     if (register.password !== register.confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       setLoading(false);
       return;
     }
 
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(register.email)) {
-      setError("Please enter a valid email address");
+      setError('Please enter a valid email address');
       setLoading(false);
       return;
     }
 
-    // 2) เตรียม payload ส่งให้ตรงกับแบ็กเอนด์
-    const payload = {
-      username: register.username.trim(),
-      name: register.name.trim(),
-      email: register.email.trim(),
-      password: register.password,
-    };
-
     try {
-      // ✅ ปรับตามรูปแบบที่ authService.register รองรับ
-      // ถ้า register(expectObject) → authService.register(payload)
-      // ถ้า register(u,n,e,p) → authService.register(payload.username, payload.name, payload.email, payload.password)
-      const response = await authService.register(payload);
-
-      if (response?.status === 200 || response?.status === 201) {
-        await Swal.fire({
-          title: "Registration Successful",
-          text: `Welcome, ${register.username}! Your account has been created.`,
-          icon: "success",
-          confirmButtonText: "Go to Login",
-          confirmButtonColor: "#10B981",
-          background: "#1f2937",
-          color: "#ffffff",
-          showClass: { popup: "animate__animated animate__fadeInUp" },
-          hideClass: { popup: "animate__animated animate__fadeOutDown" },
-          timer: 2000,
-          timerProgressBar: true,
-        });
-        navigate("/login");
-      } else {
-        throw new Error(response?.data?.message || "Registration failed");
-      }
-    } catch (err) {
-      const msg =
-        err?.response?.data?.message ||
-        err?.message ||
-        "An error occurred during registration";
-
-      console.error(
-        "Register error:",
-        err?.response?.status,
-        err?.response?.data || err
+      const response = await authService.register(
+        register.username,
+        register.name,
+        register.email,
+        register.password
       );
-
-      setError(msg);
+      
+      if (response.status === 200 || response.status === 201) {
+        await Swal.fire({
+          title: 'Registration Successful',
+          text: `Welcome, ${register.username}! Your account has been created.`,
+          icon: 'success',
+          confirmButtonText: 'Go to Login',
+          confirmButtonColor: '#10B981',
+          background: '#1f2937',
+          color: '#ffffff',
+          showClass: {
+            popup: 'animate__animated animate__fadeInUp'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutDown'
+          },
+          timer: 3000,
+          timerProgressBar: true
+        });
+        navigate('/login');
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'An error occurred during registration');
       Swal.fire({
-        title: "Registration Failed",
-        text: msg,
-        icon: "error",
-        confirmButtonText: "Try Again",
-        confirmButtonColor: "#EF4444",
-        background: "#1f2937",
-        color: "#ffffff",
+        title: 'Registration Failed',
+        text: error.response?.data?.message || 'An error occurred during registration',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+        confirmButtonColor: '#EF4444',
+        background: '#1f2937',
+        color: '#ffffff'
       });
     } finally {
       setLoading(false);
@@ -102,19 +88,15 @@ const RegisterRestaurant = () => {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className='container mx-auto'>
       <Navbar />
       <div className="min-h-screen flex items-center justify-center py-12 px-4">
         <div className="max-w-lg w-full">
           <div className="card bg-base-100 shadow-xl">
             <div className="card-body">
               <div className="text-center mb-6">
-                <h1 className="text-4xl font-bold text-primary mb-2">
-                  Join Us!
-                </h1>
-                <p className="text-base-content/70">
-                  Create your Grab Restaurant account
-                </p>
+                <h1 className="text-4xl font-bold text-primary mb-2">Join Us!</h1>
+                <p className="text-base-content/70">Create your Grab Restaurant account</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -199,32 +181,20 @@ const RegisterRestaurant = () => {
 
                 {error && (
                   <div className="alert alert-error">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="stroke-current shrink-0 h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>{error}</span>
                   </div>
                 )}
 
                 <div className="form-control mt-6">
-                  <button
-                    type="submit"
-                    className={`btn btn-primary w-full ${
-                      loading ? "loading" : ""
-                    }`}
+                  <button 
+                    type="submit" 
+                    className={`btn btn-primary w-full ${loading ? 'loading' : ''}`}
                     disabled={loading}
                   >
-                    {loading ? "Creating Account..." : "Create Account"}
+                    {loading ? 'Creating Account...' : 'Create Account'}
                   </button>
                 </div>
               </form>
@@ -233,9 +203,9 @@ const RegisterRestaurant = () => {
 
               <div className="text-center">
                 <p className="text-base-content/70">
-                  Already have an account?{" "}
-                  <button
-                    onClick={() => navigate("/login")}
+                  Already have an account?{' '}
+                  <button 
+                    onClick={() => navigate('/login')}
                     className="link link-primary font-semibold"
                   >
                     Sign in here
